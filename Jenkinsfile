@@ -23,7 +23,7 @@ pipeline {
             steps {
                 echo 'deploying the application....'
                 withCredentials([usernamePassword(credentials: 'server-cred',usernameVariable: USER, passwordVariable: PWD)]){
-                    sh "some script ${USER} ${pwd}"
+                    sh "some script ${USER} ${PWD}"
                 }
             }
         }               
