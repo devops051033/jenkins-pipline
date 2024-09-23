@@ -8,10 +8,10 @@ pipeline {
     stages {
         stage('test') {
             when{
-                expression { env.GIT_BRANCH == 'origin/feature-basic-pipline' }
+                expression { changeset "*/**" && env.GIT_BRANCH == 'origin/feature-basic-pipline'}
             }
             steps {
-                echo "testing the application.....using branch -> ${env.GIT_BRANCH}"
+                echo "testing the application using branch -> ${env.GIT_BRANCH}"
                 echo "building app -> ${APP_NAME} version ${NEW_VERSION}"
             }
         }
