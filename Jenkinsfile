@@ -16,6 +16,42 @@ pipeline {
             }
         }
 
+        stage('test-2') {
+            when {
+                expression { currentBuild.changeSets.size() > 0 }
+            }
+            steps {
+                echo 'Testing the application.....'
+                echo "Building app -> ${APP_NAME} version ${NEW_VERSION}"
+            }
+        }
+
+        stage('check-changes') {
+            steps {
+                script {
+                    def changeLog = ""
+                    for (changeSet in currentBuild.changeSets) {
+                        for (entry in changeSet.items) {
+                            changeLog += "Commit: ${entry.commitId}\n"
+                            changeLog += "Author: ${entry.author}\n"
+                            changeLog += "Message: ${entry.msg}\n"
+                            changeLog += "Affected files:\n"
+                            for (file in entry.affectedFiles) {
+                                changeLog += "    ${file.path}\n"
+                            }
+                            changeLog += "\n"
+                        }
+                    }
+
+                    if (changeLog) {
+                        echo "Changes detected:\n${changeLog}"
+                    } else {
+                        echo "No changes detected in this build."
+                    }
+                }
+            }
+        }
+
         stage('build') {
             steps {
                 echo 'building the application.....'
